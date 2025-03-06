@@ -5,18 +5,13 @@ import CreateFaculty from '../pages/admin/CreateFaculty';
 import CreateStudent from '../pages/admin/CreateStudent';
 import { NavLink } from 'react-router-dom';
 
-type TRoute = {
-  path: string;
-  element: ReactNode;
-};
-
 type TSidebarItem = {
   key: string;
   label: ReactNode;
   children?: TSidebarItem[];
 };
 
-const adminPaths = [
+export const adminPaths = [
   {
     name: 'Dashboard',
     path: 'dashboard',
@@ -45,6 +40,7 @@ const adminPaths = [
         path: 'create-member',
         element: <CreateStudent />,
       },
+    
       
     ],
   },
@@ -75,45 +71,3 @@ export const adminSidebarItems = adminPaths.reduce(
   []
 );
 
-//* Programatical way
-
-export const adminRoutes = adminPaths.reduce((acc: TRoute[], item) => {
-  if (item.path && item.element) {
-    acc.push({
-      path: item.path,
-      element: item.element,
-    });
-  }
-
-  if (item.children) {
-    item.children.forEach((child) => {
-      acc.push({
-        path: child.path,
-        element: child.element,
-      });
-    });
-  }
-
-  return acc;
-}, []);
-
-//! Hard coded way
-
-// export const adminPaths = [
-//   {
-//     path: 'dashboard',
-//     element: <AdminDashboard />,
-//   },
-//   {
-//     path: 'create-student',
-//     element: <CreateStudent />,
-//   },
-//   {
-//     path: 'create-admin',
-//     element: <CreateAdmin />,
-//   },
-//   {
-//     path: 'create-faculty',
-//     element: <CreateFaculty />,
-//   },
-// ];
