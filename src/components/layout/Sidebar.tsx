@@ -7,13 +7,12 @@ import { useAppSelector } from "../../redux/hooks";
 import { selectCurrentUser } from "../../redux/features/auth/authSlice";
 const { Sider } = Layout;
 const userRole = {
-  ADMIN: 'admin',
-  FACULTY: 'faculty',
-  STUDENT: 'student',
+  ADMIN: "admin",
+  FACULTY: "faculty",
+  STUDENT: "student",
 };
 const Sidebar = () => {
- 
-  const user = useAppSelector(selectCurrentUser)
+  const user = useAppSelector(selectCurrentUser);
 
   let sidebarItems;
 
@@ -33,7 +32,11 @@ const Sidebar = () => {
   }
 
   return (
-    <Sider breakpoint="lg" collapsedWidth="0">
+    <Sider
+      style={{ height: "100vh", position: "sticky", top: "0", left: "0" }}
+      breakpoint="lg"
+      collapsedWidth="0"
+    >
       <div style={{ color: "wheat", textAlign: "center", padding: "20px" }}>
         <h1 style={{ cursor: "pointer", fontFamily: "monospace" }}>
           PH University

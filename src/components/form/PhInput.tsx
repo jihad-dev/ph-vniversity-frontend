@@ -1,13 +1,23 @@
-import { Input } from "antd";
+import { Form, Input } from "antd";
 import { Controller } from "react-hook-form";
 
-const PhInput = ({ type, name, label }) => {
+interface PhInputProps {
+  type: string;
+  name: string;
+  label?: string;
+}
+
+const PhInput = ({ type, name, label }: PhInputProps) => {
   return (
     <div style={{ marginBottom: "20px" }}>
-      {label ? label : null}
+  
       <Controller
         name={name}
-        render={({ field }) => <Input {...field} type={type} id={name} />}
+        render={({ field }) => (
+          <Form.Item label={label}>
+            <Input {...field} type={type} id={name} />
+          </Form.Item>
+        )}
       />
     </div>
   );
