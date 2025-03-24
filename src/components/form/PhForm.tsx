@@ -11,10 +11,14 @@ interface PhFormProps {
 
 const PhForm = ({ onsubmit, children, resolver }: PhFormProps) => {
   const methods = useForm({ resolver }); // Pass resolver to useForm
+  const submit = (data: any) => {
+    onsubmit(data);
+    methods.reset();
+  }
 
   return (
     <FormProvider {...methods}>
-      <Form layout="vertical" onFinish={methods.handleSubmit(onsubmit)}>
+      <Form layout="vertical" onFinish={methods.handleSubmit(submit)}>
         {children}
       </Form>
     </FormProvider>

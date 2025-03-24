@@ -13,9 +13,10 @@ const PhInput = ({ type, name, label }: PhInputProps) => {
   
       <Controller
         name={name}
-        render={({ field }) => (
+        render={({ field ,fieldState: { error } }) => (
           <Form.Item label={label}>
             <Input {...field} type={type} id={name} />
+            {error && <p style={{ color: "red" }}>{error?.message}</p>}
           </Form.Item>
         )}
       />
