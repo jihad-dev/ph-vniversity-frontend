@@ -1,4 +1,4 @@
-import { Controller, FieldValues, SubmitHandler } from "react-hook-form";
+import { Controller, FieldValues } from "react-hook-form";
 import { useCreateStudentMutation } from "../../../redux/features/admin/userManagement.api";
 import {
   useGetAcademicDepartmentsQuery,
@@ -12,9 +12,11 @@ import { bloodGroupOptions, genderOptions } from "../../../constans/global";
 import PhDatePicker from "../../../components/form/PhDatePicker";
 import { toast } from "sonner";
 import { SerializedError } from "@reduxjs/toolkit";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { createStudentSchema } from "../../../Schemas/UserManagement.schema";
 
 const CreateStudent = () => {
-  const [addStudent, { data, error }] = useCreateStudentMutation(undefined);
+  const [addStudent] = useCreateStudentMutation(undefined);
 
   const { data: sData, isLoading: sIsLoading } =
     useGetAllSemestersQuery(undefined);
@@ -66,7 +68,7 @@ const CreateStudent = () => {
   return (
     <Row justify="center">
       <Col span={24}>
-        <PhForm onsubmit={onSubmit}>
+        <PhForm onsubmit={onSubmit}  resolver={zodResolver(createStudentSchema)} >
           <Divider>Personal Info.</Divider>
           <Row gutter={8}>
             <Col span={24} md={{ span: 12 }} lg={{ span: 8 }}>

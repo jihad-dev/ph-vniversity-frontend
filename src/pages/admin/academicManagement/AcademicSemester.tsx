@@ -10,6 +10,7 @@ interface DataType {
 }
 import { useGetAllSemestersQuery } from "../../../redux/features/admin/academicManagement.api";
 import { useState } from "react";
+import { OrbitProgress } from "react-loading-indicators";
 
 const AcademicSemester = () => {
   const [params, setParams] = useState<{ name: string; value: string }[]>([]);
@@ -131,11 +132,18 @@ const AcademicSemester = () => {
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          height: "100vh",
-          fontSize: "20px",
+          height: "100vh", // Make it take the full height of the viewport
+          width: "100%", // Ensures full width
         }}
       >
-        Loading...
+        <OrbitProgress
+          variant="dotted"
+          dense
+          color="#000"
+          size="medium"
+          text="Loading..."
+          textColor=""
+        />
       </div>
     );
   }

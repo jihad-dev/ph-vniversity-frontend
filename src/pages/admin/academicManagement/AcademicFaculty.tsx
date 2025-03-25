@@ -1,5 +1,6 @@
 import { Table, TableColumnsType, TableProps } from "antd";
 import { useGetAcademicFacultyQuery } from "../../../redux/features/admin/academicManagement.api";
+import { OrbitProgress } from "react-loading-indicators";
 
 interface DataType {
   key: string;
@@ -42,13 +43,18 @@ const AcademicFaculty = () => {
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          height: "100vh",
-          fontSize: "20px",
-          
-
+          height: "100vh", // Make it take the full height of the viewport
+          width: "100%", // Ensures full width
         }}
       >
-        Loading...
+        <OrbitProgress
+          variant="dotted"
+          dense
+          color="#000"
+          size="medium"
+          text="Loading..."
+          textColor=""
+        />
       </div>
     );
   }
