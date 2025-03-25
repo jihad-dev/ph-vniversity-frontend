@@ -13,7 +13,7 @@ const PhForm = ({ onsubmit, children, resolver }: PhFormProps) => {
   const methods = useForm({ resolver }); // Pass resolver to useForm
   const submit = (data: any) => {
     onsubmit(data);
-    methods.reset();
+    // methods.reset();
   }
 
   return (

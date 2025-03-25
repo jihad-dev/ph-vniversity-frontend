@@ -11,11 +11,10 @@ import PhSelect from "../../../components/form/PhSelect";
 import { bloodGroupOptions, genderOptions } from "../../../constans/global";
 import PhDatePicker from "../../../components/form/PhDatePicker";
 import { toast } from "sonner";
+import { SerializedError } from "@reduxjs/toolkit";
 
 const CreateStudent = () => {
   const [addStudent, { data, error }] = useCreateStudentMutation(undefined);
-
-  console.log({ data, error });
 
   const { data: sData, isLoading: sIsLoading } =
     useGetAllSemestersQuery(undefined);
@@ -33,7 +32,8 @@ const CreateStudent = () => {
     label: item.name,
   }));
 
-  const onSubmit: SubmitHandler<FieldValues> = (data) => {
+  const onSubmit = async (data: FieldValues) => {
+    const toastId = toast.loading("Student is Creating... ");
     const studentData = {
       password: "student123",
       student: data,
@@ -43,10 +43,26 @@ const CreateStudent = () => {
 
     formData.append("data", JSON.stringify(studentData));
     formData.append("file", data.image);
+    try {
+      const res = await addStudent(formData);
+      if (res.error) {
+        // Extract the error message from the response
+        const errorMessage =
+          (res.error as SerializedError)?.message ||
+          (res.error as any)?.data?.err?.issues?.[0]?.message || // Extract the first validation error message
+          "An error occurred";
 
-    addStudent(formData);
+        // Display the error message in the UI
+        toast.error(errorMessage, { id: toastId });
+      } else {
+        toast.success("Student created successfully", {
+          id: toastId,
+        });
+      }
+    } catch (error) {
+      toast.error("Something went wrong", { id: toastId });
+    }
   };
-
   return (
     <Row justify="center">
       <Col span={24}>
