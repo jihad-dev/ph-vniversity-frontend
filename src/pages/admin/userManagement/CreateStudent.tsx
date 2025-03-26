@@ -84,7 +84,7 @@ const CreateStudent = () => {
               <PhSelect options={genderOptions} name="gender" label="Gender" />
             </Col>
             <Col span={24} md={{ span: 12 }} lg={{ span: 8 }}>
-              <PhDatePicker name="dateOfBirth" label="Date of birth" />
+              <PhDatePicker  name="dateOfBirth" label="Date of birth" />
             </Col>
             <Col span={24} md={{ span: 12 }} lg={{ span: 8 }}>
               <PhSelect
@@ -112,14 +112,14 @@ const CreateStudent = () => {
           <Divider>Contact Info.</Divider>
           <Row gutter={8}>
             <Col span={24} md={{ span: 12 }} lg={{ span: 8 }}>
-              <PhInput type="text" name="email" label="Email" />
+              <PhInput type="email" name="email" label="Email" />
             </Col>
             <Col span={24} md={{ span: 12 }} lg={{ span: 8 }}>
-              <PhInput type="text" name="contactNo" label="Contact" />
+              <PhInput type="number" name="contactNo" label="Contact" />
             </Col>
             <Col span={24} md={{ span: 12 }} lg={{ span: 8 }}>
               <PhInput
-                type="text"
+                type="number"
                 name="emergencyContactNo"
                 label="Emergency Contact"
               />
@@ -157,7 +157,7 @@ const CreateStudent = () => {
             </Col>
             <Col span={24} md={{ span: 12 }} lg={{ span: 8 }}>
               <PhInput
-                type="text"
+                type="number"
                 name="guardian.fatherContactNo"
                 label="Father ContactNo"
               />
@@ -178,7 +178,7 @@ const CreateStudent = () => {
             </Col>
             <Col span={24} md={{ span: 12 }} lg={{ span: 8 }}>
               <PhInput
-                type="text"
+                type="number"
                 name="guardian.motherContactNo"
                 label="Mother ContactNo"
               />
@@ -198,7 +198,7 @@ const CreateStudent = () => {
             </Col>
             <Col span={24} md={{ span: 12 }} lg={{ span: 8 }}>
               <PhInput
-                type="text"
+                type="number"
                 name="localGuardian.contactNo"
                 label="Contact No."
               />

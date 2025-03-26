@@ -2,6 +2,13 @@
 import { baseApi } from "../../api/baseApi";
 const userManagementApi = baseApi.injectEndpoints({
     endpoints: (builder) => ({
+        createStudent: builder.mutation({
+            query: (data) => ({
+                url: '/users/create-student',
+                method: 'POST',
+                body: data,
+            })
+        }),
         getAllStudents: builder.query({
             query: (args) => {
                 const params = new URLSearchParams();
@@ -30,14 +37,13 @@ const userManagementApi = baseApi.injectEndpoints({
             }),
             transformResponse: (response: any) => response?.data,
         }),
-        createStudent: builder.mutation({
-            query: (data) => ({
-                url: '/users/create-student',
-                method: 'POST',
-                body: data,
-            })
-        }),
-
+        // updateStudent: builder.mutation({
+        //     query: ({ _id, data }) => ({
+        //         url: `/users/change-status/${_id}`,
+        //         method: 'POST',
+        //         body: data,
+        //     }),
+        // }),
 
     })
 })
