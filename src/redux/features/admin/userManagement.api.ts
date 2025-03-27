@@ -37,15 +37,15 @@ const userManagementApi = baseApi.injectEndpoints({
             }),
             transformResponse: (response: any) => response?.data,
         }),
-        // updateStudent: builder.mutation({
-        //     query: ({ _id, data }) => ({
-        //         url: `/users/change-status/${_id}`,
-        //         method: 'POST',
-        //         body: data,
-        //     }),
-        // }),
+        updateUserStatus: builder.mutation({
+            query: (args) => ({
+                url: `/users/change-status/${args?.id}`,
+                method: 'POST',
+                body: args?.data,
+            }),
+        }),
 
     })
 })
 
-export const { useCreateStudentMutation, useGetAllStudentsQuery,useGetStudentByIdQuery } = userManagementApi;
+export const { useCreateStudentMutation, useGetAllStudentsQuery, useGetStudentByIdQuery, useUpdateUserStatusMutation } = userManagementApi;
