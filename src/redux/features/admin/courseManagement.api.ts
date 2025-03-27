@@ -43,17 +43,10 @@ const courseManagementApi = baseApi.injectEndpoints({
             invalidatesTags: ['semester']
         }),
         getAllCourses: builder.query({
-            query: (args) => {
-                const params = new URLSearchParams();
-                if (args) {
-                    args.forEach((item: { name: string; value: string }) => {
-                        params.append(item.name, item.value);
-                    });
-                }
-                return {
+            query: () => {
+             return {
                     url: '/courses',
                     method: 'GET',
-                    params: params,
                 }
             },
             providesTags: ['courses'],

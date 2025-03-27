@@ -44,7 +44,7 @@ const RegisteredSemesters = () => {
     isLoading,
   } = useGetAllRegisteredSemesterQuery(params);
   console.log(semesterRegisteredData);
-  
+
   const [updateSemesterStatus] = useUpdateRegisteredSemesterMutation();
 
   const tableData = semesterRegisteredData?.data?.map(

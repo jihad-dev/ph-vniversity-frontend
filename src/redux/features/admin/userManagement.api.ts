@@ -44,8 +44,22 @@ const userManagementApi = baseApi.injectEndpoints({
                 body: args?.data,
             }),
         }),
+        getAllFaculties: builder.query({
+            query: () => {
+                return {
+                    url: '/faculties',
+                    method: 'GET',
+                }
+            },
+            transformResponse: (response: any) => {
+                return {
+                    data: response?.data,
+                    meta: response?.meta,
+                }
+            }
+        }),
 
     })
 })
 
-export const { useCreateStudentMutation, useGetAllStudentsQuery, useGetStudentByIdQuery, useUpdateUserStatusMutation } = userManagementApi;
+export const { useCreateStudentMutation, useGetAllStudentsQuery, useGetStudentByIdQuery, useUpdateUserStatusMutation, useGetAllFacultiesQuery } = userManagementApi;
