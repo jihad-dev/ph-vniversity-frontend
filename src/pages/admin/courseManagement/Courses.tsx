@@ -13,7 +13,10 @@ interface DataType {
 }
 
 import { OrbitProgress } from "react-loading-indicators";
-import { useGetAllCoursesQuery } from "../../../redux/features/admin/courseManagement.api";
+import {
+  useAssignFacultyMutation,
+  useGetAllCoursesQuery,
+} from "../../../redux/features/admin/courseManagement.api";
 import { useState } from "react";
 import PhForm from "../../../components/form/PhForm";
 import PhSelect from "../../../components/form/PhSelect";
@@ -48,7 +51,7 @@ const Courses = () => {
       title: "Action",
       key: "action",
       render: (item) => {
-        return <AssignFacultyModal data={item} />;
+        return <AssignFacultyModal facultyInfo={item} />;
       },
     },
   ];
@@ -84,10 +87,11 @@ const Courses = () => {
   );
 };
 
-const AssignFacultyModal = ({ data }) => {
+const AssignFacultyModal = ({ facultyInfo }) => {
   const { data: facultiesData } = useGetAllFacultiesQuery(undefined);
+  const [assignFaculty] = useAssignFacultyMutation();
 
-  const facultiesOptions = facultiesData?.data?.map((item:any) => ({
+  const facultiesOptions = facultiesData?.data?.map((item: any) => ({
     value: item?._id,
     label: item?.fullName,
   }));
@@ -106,7 +110,11 @@ const AssignFacultyModal = ({ data }) => {
     setIsModalOpen(false);
   };
   const onSubmit = (data: any) => {
-    console.log(data);
+    const facultiesData = {
+      courseId: facultyInfo?.key,
+      data,
+    };
+    assignFaculty(facultiesData);
   };
   return (
     <>

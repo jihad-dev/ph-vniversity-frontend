@@ -1,6 +1,7 @@
 import {
   Button,
   Dropdown,
+  Modal,
   Pagination,
   Space,
   Table,
@@ -13,7 +14,8 @@ import {
 } from "../../../redux/features/admin/userManagement.api";
 import { Link } from "react-router-dom";
 import { OrbitProgress } from "react-loading-indicators";
-import { FieldValues } from "react-hook-form";
+import PhForm from "../../../components/form/PhForm";
+import PhSelect from "../../../components/form/PhSelect";
 
 type DataType = {
   _id: string;
@@ -29,23 +31,9 @@ type DataType = {
   };
 };
 
-const items = [
-  {
-    label: "in-progress",
-    key: "in-progress",
-  },
-  {
-    label: "blocked",
-    key: "blocked",
-  },
-];
-
 const GetStudentsData = () => {
   const [params, setParams] = useState<{ name: string; value: string }[]>([]);
   const [page, setPage] = useState(0);
-
-  const [status, setStatus] = useState<string>("");
-
   const {
     data: studentData,
     isLoading,
@@ -55,24 +43,7 @@ const GetStudentsData = () => {
     { name: "sort", value: "id" },
     ...params,
   ]);
-  console.log(status.status);
-
-  const [updateUserStatus] = useUpdateUserStatusMutation();
-  const handleStatusUpdate = (data: FieldValues) => {
-    console.log(data);
-    console.log(status);
-    const updateStatusData = {
-      id: status,
-      data: {
-        status: data?.key,
-      },
-    };
-    // updateUserStatus(updateStatusData);
-  };
-  const menuProps = {
-    items,
-    onClick: handleStatusUpdate,
-  };
+ 
 
   const metaData = studentData?.meta;
   const tableData = studentData?.data?.map(
@@ -83,10 +54,12 @@ const GetStudentsData = () => {
       email,
       fullName,
       contactNo,
-      status: `${user?.status}`,
+      status: `${user?._id}`,
       key: _id, // Important! Each row needs a unique key
     })
+   
   );
+
 
   const columns: TableColumnsType<any> = [
     {
@@ -131,10 +104,7 @@ const GetStudentsData = () => {
             <Link to={`/admin/update-student/${item?.key}`}>
               <Button>Update</Button>
             </Link>
-
-            <Dropdown menu={menuProps} trigger={["click"]}>
-              <Button onClick={() => setStatus(item)}>Change Status</Button>
-            </Dropdown>
+            <ChangeUserStatus userInfo={item} />
           </Space>
         );
       },
@@ -184,4 +154,56 @@ const GetStudentsData = () => {
   );
 };
 
+const ChangeUserStatus = ({ userInfo }) => {
+  console.log(userInfo.status);
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const showModal = () => {
+    setIsModalOpen(true);
+  };
+  const handleOk = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
+  const statusOptions = [
+    {
+      label: "In Progress",
+      value: "in-progress",
+    },
+    {
+      label: "Blocked",
+      value: "blocked",
+    },
+  ];
+  const [changeStatus] = useUpdateUserStatusMutation();
+
+  const onSubmit = (data: any) => {
+    console.log(data);
+    const userData = {
+      userId: userInfo?.status,
+      data,
+    };
+    changeStatus(userData);
+    console.log(userData);
+  };
+  return (
+    <>
+      <Button onClick={showModal}>Change Status</Button>
+      <Modal
+        title="Basic Modal"
+        open={isModalOpen}
+        onOk={handleOk}
+        onCancel={handleCancel}
+      >
+        <PhForm onsubmit={onSubmit}>
+          <PhSelect options={statusOptions} name="status" label="Status" />
+          <Button htmlType="submit">submit</Button>
+        </PhForm>
+      </Modal>
+    </>
+  );
+};
 export default GetStudentsData;
