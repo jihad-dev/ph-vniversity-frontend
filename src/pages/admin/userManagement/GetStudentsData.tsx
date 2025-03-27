@@ -1,6 +1,5 @@
 import {
   Button,
-  Dropdown,
   Modal,
   Pagination,
   Space,
@@ -16,6 +15,7 @@ import { Link } from "react-router-dom";
 import { OrbitProgress } from "react-loading-indicators";
 import PhForm from "../../../components/form/PhForm";
 import PhSelect from "../../../components/form/PhSelect";
+import { toast } from "sonner";
 
 type DataType = {
   _id: string;
@@ -25,9 +25,9 @@ type DataType = {
   email: string;
   fullName: string;
   contactNo: string;
-  status: string;
   user?: {
     status: string;
+    _id: string;
   };
 };
 
@@ -37,45 +37,33 @@ const GetStudentsData = () => {
   const {
     data: studentData,
     isLoading,
+    refetch,
     isFetching,
   } = useGetAllStudentsQuery([
     { name: "page", value: page },
     { name: "sort", value: "id" },
     ...params,
   ]);
- 
 
   const metaData = studentData?.meta;
   const tableData = studentData?.data?.map(
-    ({ _id, name, id, email, fullName, contactNo, user }: DataType) => ({
+    ({ _id, name, email, fullName, contactNo, user }: DataType) => ({
       _id,
       name,
-      id,
       email,
       fullName,
       contactNo,
-      status: `${user?._id}`,
+      status: `${user?.status}`,
+      userId: `${user?._id}`,
       key: _id, // Important! Each row needs a unique key
     })
-   
   );
-
 
   const columns: TableColumnsType<any> = [
     {
       title: "Name",
       key: "name",
       dataIndex: "fullName",
-    },
-    {
-      title: "id",
-      key: "_id",
-      dataIndex: "_id",
-    },
-    {
-      title: "Roll No.",
-      key: "id",
-      dataIndex: "id",
     },
     {
       title: "Email",
@@ -104,7 +92,7 @@ const GetStudentsData = () => {
             <Link to={`/admin/update-student/${item?.key}`}>
               <Button>Update</Button>
             </Link>
-            <ChangeUserStatus userInfo={item} />
+            <ChangeUserStatus userInfo={item} refetch={refetch} />
           </Space>
         );
       },
@@ -154,20 +142,15 @@ const GetStudentsData = () => {
   );
 };
 
-const ChangeUserStatus = ({ userInfo }) => {
-  console.log(userInfo.status);
-
+const ChangeUserStatus = ({
+  userInfo,
+  refetch,
+}: {
+  userInfo: { userId: string };
+  refetch: () => void; // Pass the refetch function as a prop
+}) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const showModal = () => {
-    setIsModalOpen(true);
-  };
-  const handleOk = () => {
-    setIsModalOpen(false);
-  };
-
-  const handleCancel = () => {
-    setIsModalOpen(false);
-  };
+  const [changeStatus] = useUpdateUserStatusMutation();
   const statusOptions = [
     {
       label: "In Progress",
@@ -178,17 +161,49 @@ const ChangeUserStatus = ({ userInfo }) => {
       value: "blocked",
     },
   ];
-  const [changeStatus] = useUpdateUserStatusMutation();
 
-  const onSubmit = (data: any) => {
-    console.log(data);
-    const userData = {
-      userId: userInfo?.status,
-      data,
-    };
-    changeStatus(userData);
-    console.log(userData);
+  const showModal = () => {
+    setIsModalOpen(true);
   };
+
+  const handleOk = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
+
+  const onSubmit = async (data: any) => {
+    try {
+      const userData = {
+        userId: userInfo?.userId,
+        data,
+      };
+
+      // Show a loading notification
+      const toastId = toast.loading("Updating status...");
+
+      // Call the API and wait for response
+      const response = await changeStatus(userData);
+
+      if (response) {
+        // Show success notification and update UI
+        toast.success("Status updated successfully!", { id: toastId });
+
+        // Trigger refetch to update the table data
+        refetch();
+      } else {
+        throw new Error("Failed to update status");
+      }
+    } catch (error) {
+      const toastId = toast.loading(""); // Ensure toastId is defined
+      toast.error("Error updating status", { id: toastId });
+      // Show error notification
+      toast.error("Error updating status. Please try again.");
+    }
+  };
+
   return (
     <>
       <Button onClick={showModal}>Change Status</Button>
@@ -200,10 +215,11 @@ const ChangeUserStatus = ({ userInfo }) => {
       >
         <PhForm onsubmit={onSubmit}>
           <PhSelect options={statusOptions} name="status" label="Status" />
-          <Button htmlType="submit">submit</Button>
+          <Button htmlType="submit">Submit</Button>
         </PhForm>
       </Modal>
     </>
   );
 };
+
 export default GetStudentsData;
