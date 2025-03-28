@@ -5,7 +5,9 @@ interface DataType {
   title: string;
   code: string;
 }
-
+interface FacultyInfo {
+  key: string;
+}
 import { OrbitProgress } from "react-loading-indicators";
 import {
   useAssignFacultyMutation,
@@ -82,7 +84,9 @@ const Courses = () => {
   );
 };
 
-const AssignFacultyModal = ({ facultyInfo }) => {
+
+
+const AssignFacultyModal = ({ facultyInfo }: { facultyInfo: FacultyInfo }) => {
   const { data: facultiesData } = useGetAllFacultiesQuery(undefined);
   const [assignFaculty] = useAssignFacultyMutation();
 

@@ -1,3 +1,5 @@
+import { weekdays } from "moment";
+
 export const monthNames = [
     'January',
     'February',
@@ -14,7 +16,7 @@ export const monthNames = [
   ];
   
   export const genders = ['Male', 'Female', 'Other'];
-  
+  const weekdays = ['Sat', 'Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri'];
   export const bloodGroups = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
   
   export const monthOptions = monthNames.map((item) => ({
@@ -28,6 +30,12 @@ export const monthNames = [
   }));
   
   export const bloodGroupOptions = bloodGroups.map((item) => ({
+    value: item,
+    label: item,
+  }));
+
+
+  export const weekDaysOptions = weekdays.map((item) => ({
     value: item,
     label: item,
   }));

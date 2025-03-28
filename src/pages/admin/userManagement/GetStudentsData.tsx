@@ -166,9 +166,6 @@ const ChangeUserStatus = ({
     setIsModalOpen(true);
   };
 
-  const handleOk = () => {
-    setIsModalOpen(false);
-  };
 
   const handleCancel = () => {
     setIsModalOpen(false);
@@ -189,8 +186,9 @@ const ChangeUserStatus = ({
 
       if (response) {
         // Show success notification and update UI
+       
         toast.success("Status updated successfully!", { id: toastId });
-
+        setIsModalOpen(false);
         // Trigger refetch to update the table data
         refetch();
       } else {
@@ -208,9 +206,9 @@ const ChangeUserStatus = ({
     <>
       <Button onClick={showModal}>Change Status</Button>
       <Modal
+      footer={null}
         title="Basic Modal"
         open={isModalOpen}
-        onOk={handleOk}
         onCancel={handleCancel}
       >
         <PhForm onsubmit={onSubmit}>
