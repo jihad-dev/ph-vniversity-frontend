@@ -14,7 +14,6 @@ const Login = () => {
   const [login] = useLoginMutation();
   const navigate = useNavigate();
   const onSubmit = async (data: FieldValues) => {
-    
     const toastId = toast.loading("logged in");
     try {
       const userInfo = {
@@ -25,7 +24,12 @@ const Login = () => {
       const user = verifyToken(res.data.accessToken) as TUser;
       dispatch(setUser({ user: user, token: res.data.accessToken }));
       toast.success("login successful", { id: toastId, duration: 3000 });
-      navigate(`/${user?.role}/dashboard`);
+      // first login on default password force change password
+      if (res?.data?.needsPasswordChange) {
+        navigate('/change-password');
+      } else {
+        navigate(`/${user?.role}/dashboard`);
+      }
     } catch (error) {
       toast.error("something went wrong", { id: toastId, duration: 3000 });
     }
@@ -33,7 +37,7 @@ const Login = () => {
   return (
     <Row justify="center" align="middle" style={{ height: "100vh" }}>
       <PhForm onsubmit={onSubmit}>
-        <PhInput  type="text" name="userId" label="ID" />
+        <PhInput type="text" name="userId" label="ID" />
         <PhInput type="text" name="password" label="Password" />
         <Button htmlType="submit">Login</Button>
       </PhForm>

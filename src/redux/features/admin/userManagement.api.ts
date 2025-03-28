@@ -8,7 +8,15 @@ const userManagementApi = baseApi.injectEndpoints({
                 method: 'POST',
                 body: data,
             }),
-            invalidatesTags:['students']
+            invalidatesTags: ['students']
+        }),
+        changePassword: builder.mutation({
+            query: (data) => ({
+                url: '/auth/change-password',
+                method: 'POST',
+                body: data,
+            }),
+            invalidatesTags: ['students']
         }),
         getAllStudents: builder.query({
             query: (args) => {
@@ -24,7 +32,7 @@ const userManagementApi = baseApi.injectEndpoints({
                     params: params,
                 }
             },
-            providesTags:['students'],
+            providesTags: ['students'],
             transformResponse: (response: any) => {
                 return {
                     data: response?.data,
@@ -38,9 +46,9 @@ const userManagementApi = baseApi.injectEndpoints({
                 method: 'GET',
             }),
             transformResponse: (response: any) => response?.data,
-        
+
         }),
-        
+
         updateUserStatus: builder.mutation({
             query: (args) => ({
                 url: `/users/change-status/${args?.userId}`,
@@ -61,11 +69,11 @@ const userManagementApi = baseApi.injectEndpoints({
                     meta: response?.meta,
                 }
             },
-          
+
         }),
-        
+
 
     })
 })
 
-export const { useCreateStudentMutation, useGetAllStudentsQuery, useGetStudentByIdQuery, useUpdateUserStatusMutation, useGetAllFacultiesQuery } = userManagementApi;
+export const { useCreateStudentMutation, useGetAllStudentsQuery, useGetStudentByIdQuery, useUpdateUserStatusMutation, useGetAllFacultiesQuery, useChangePasswordMutation } = userManagementApi;
