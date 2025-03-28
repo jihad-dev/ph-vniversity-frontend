@@ -1,10 +1,4 @@
 import { Button, Modal, Table, TableColumnsType, Tag } from "antd";
-
-interface AcademicSemester {
-  name: string;
-  year: string;
-}
-
 interface DataType {
   _id: string;
   prefix: string;
@@ -21,6 +15,7 @@ import { useState } from "react";
 import PhForm from "../../../components/form/PhForm";
 import PhSelect from "../../../components/form/PhSelect";
 import { useGetAllFacultiesQuery } from "../../../redux/features/admin/userManagement.api";
+import { toast } from "sonner";
 
 const Courses = () => {
   const {
@@ -102,27 +97,40 @@ const AssignFacultyModal = ({ facultyInfo }) => {
     setIsModalOpen(true);
   };
 
-  const handleOk = () => {
-    setIsModalOpen(false);
-  };
-
   const handleCancel = () => {
     setIsModalOpen(false);
   };
-  const onSubmit = (data: any) => {
-    const facultiesData = {
-      courseId: facultyInfo?.key,
-      data,
-    };
-    assignFaculty(facultiesData);
+
+  const onSubmit = async (data: any) => {
+    let toastId: string | undefined;
+    try {
+      toastId = toast.loading("assign....") as string;
+      const facultiesData = {
+        courseId: facultyInfo?.key,
+        data,
+      };
+
+      await assignFaculty(facultiesData);
+
+      // **Close the modal after successful submission**
+      setIsModalOpen(false);
+      toast.success("Faculty assigned successfully!", { id: toastId });
+    } catch (error) {
+      if (toastId) {
+        toast.error("Failed to assign faculty. Please try again.", {
+          id: toastId,
+        });
+      }
+      console.error("Error:", error);
+    }
   };
   return (
     <>
       <Button onClick={showModal}>Assign Faculty</Button>
       <Modal
+        footer={null}
         title="Basic Modal"
         open={isModalOpen}
-        onOk={handleOk}
         onCancel={handleCancel}
       >
         <PhForm onsubmit={onSubmit}>
