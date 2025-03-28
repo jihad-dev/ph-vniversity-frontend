@@ -5,13 +5,13 @@ import { Button, Col, Divider, Form, Input, Row } from "antd";
 import PhForm from "../../../components/form/PhForm";
 import PhInput from "../../../components/form/PhInput";
 import PhSelect from "../../../components/form/PhSelect";
-import { bloodGroupOptions, genderOptions } from "../../../constans/global";
+import { bloodGroupOptions } from "../../../constans/global";
 import { semesterOptions } from "../../../constans/semester";
-import { Controller, FieldValues, useForm } from "react-hook-form";
+import { Controller, FieldValues } from "react-hook-form";
 import PhDatePicker from "../../../components/form/PhDatePicker";
 
 const UpdateStudent = () => {
-  const { register } = useForm();
+
   const { studentId } = useParams();
   const { data: student, error, isLoading } = useGetStudentByIdQuery(studentId);
   console.log(student);

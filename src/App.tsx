@@ -4,7 +4,7 @@ import PrivateRoute from "./components/layout/PrivateRoute";
 const App = () => {
   return (
     <div>
-      <PrivateRoute>
+      <PrivateRoute role={undefined}>
         <MainLayout />
       </PrivateRoute>
     </div>
