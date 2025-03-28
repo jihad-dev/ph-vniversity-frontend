@@ -41,7 +41,6 @@ const CreateCourse = () => {
 
     try {
       const res = await addCourses(courseData);
-      console.log(res);
       if (res.error) {
         toast.error(res?.error?.data?.message, { id: toastId });
       } else {

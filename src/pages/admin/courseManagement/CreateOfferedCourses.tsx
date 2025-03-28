@@ -18,18 +18,17 @@ import PHSelectWithWatch from "../../../components/form/PHSelectWithWatch";
 import PhInput from "../../../components/form/PhInput";
 import { weekDaysOptions } from "../../../constans/global";
 import PHTimePicker from "../../../components/form/PhTimePicker";
+import { toast } from "sonner";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { offeredCourseSchema } from "../../../Schemas/AcademicManagement.schema";
 
 const CreateOfferedCourses = () => {
   const [courseId, setCourseId] = useState("");
-
   const [addOfferedCourse] = useCreateOfferedCourseMutation();
-
   const { data: semesterRegistrationData } = useGetAllRegisteredSemesterQuery([
     { name: "sort", value: "year" },
     { name: "status", value: "UPCOMING" },
   ]);
-console.log(semesterRegistrationData);
-
   const { data: academicFacultyData } = useGetAcademicFacultyQuery(undefined);
 
   const { data: academicDepartmentData } =
@@ -42,52 +41,73 @@ console.log(semesterRegistrationData);
 
   const semesterRegistrationOptions = semesterRegistrationData?.data?.map(
     (item: any) => ({
-      value: item._id,
-      label: `${item.academicSemester.name} ${item.academicSemester.year}`,
+      value: item?._id,
+      label: `${item?.academicSemester?.name} ${item?.academicSemester?.year}`,
     })
   );
 
   const academicFacultyOptions = academicFacultyData?.data?.map(
     (item: any) => ({
-      value: item._id,
-      label: item.name,
+      value: item?._id,
+      label: item?.name,
     })
   );
 
   const academicDepartmentOptions = academicDepartmentData?.data?.map(
     (item: any) => ({
-      value: item._id,
-      label: item.name,
+      value: item?._id,
+      label: item?.name,
     })
   );
 
   const courseOptions = coursesData?.data?.map((item: any) => ({
-    value: item._id,
-    label: item.title,
+    value: item?._id,
+    label: item?.title,
   }));
 
   const facultiesOptions = facultiesData?.data?.faculties?.map((item: any) => ({
-    value: item._id,
-    label: item.fullName,
+    value: item?._id,
+    label: item?.fullName,
   }));
 
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
-    const offeredCourseData = {
-      ...data,
-      maxCapacity: Number(data.maxCapacity),
-      section: Number(data.section),
-      startTime: moment(new Date(data.startTime)).format("HH:mm"),
-      endTime: moment(new Date(data.endTime)).format("HH:mm"),
-    };
+    let toastId;
+    toastId = toast.loading("offered Course Creating...");
+    try {
+      const offeredCourseData = {
+        ...data,
+        maxCapacity: Number(data?.maxCapacity),
+        section: Number(data?.section),
+        startTime: moment(new Date(data?.startTime)).format("HH:mm"),
+        endTime: moment(new Date(data?.endTime)).format("HH:mm"),
+      };
+      // API call
+      const res = await addOfferedCourse(offeredCourseData);
+      console.log(res);
 
-    const res = await addOfferedCourse(offeredCourseData);
-    console.log(res);
+      // Handle response
+      if (res?.data?.success) {
+        toast.success("Course added successfully!", { id: toastId });
+      } else {
+        const errorMessage =
+          (res?.error as { message?: string })?.message ||
+          "Failed to add course.";
+        toast.error(errorMessage);
+      }
+    } catch (error) {
+      console.error("Submission Error:", error);
+      if (toastId) {
+        toast.error("An error occurred while submitting the form.", {
+          id: toastId,
+        });
+      }
+    }
   };
 
   return (
     <Flex justify="center" align="center">
       <Col span={6}>
-        <PhForm onsubmit={onSubmit}>
+        <PhForm onsubmit={onSubmit}  resolver={zodResolver(offeredCourseSchema)}>
           <PhSelect
             name="semesterRegistration"
             label="Semester Registrations"
@@ -125,7 +145,6 @@ console.log(semesterRegistrationData);
           />
           <PHTimePicker name="startTime" label="Start Time" />
           <PHTimePicker name="endTime" label="End Time" />
-
           <Button htmlType="submit">Submit</Button>
         </PhForm>
       </Col>
