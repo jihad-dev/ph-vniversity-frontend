@@ -107,7 +107,8 @@ const CreateOfferedCourses = () => {
   return (
     <Flex justify="center" align="center">
       <Col span={6}>
-        <PhForm onsubmit={onSubmit}  resolver={zodResolver(offeredCourseSchema)}>
+      {/* resolver={zodResolver(offeredCourseSchema)} */}
+        <PhForm onsubmit={onSubmit}>
           <PhSelect
             name="semesterRegistration"
             label="Semester Registrations"
